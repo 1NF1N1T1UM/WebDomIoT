@@ -15,10 +15,23 @@ document.addEventListener("DOMContentLoaded", () => {
     // Observer les sections pour les faire apparaître et disparaître en scrollant
     const sectionObserver = new IntersectionObserver(entries => {
         entries.forEach(entry => {
+            const sectionId = entry.target.id;
+            const correspondingNavLink = document.querySelector(`nav a[href="#${sectionId}"]`);
+            
             // Si la section est visible
             if (entry.isIntersecting) {
                 entry.target.classList.add("active");
                 entry.target.classList.remove("inactive");
+                
+                // Ajouter la classe active au lien de navigation correspondant
+                if (correspondingNavLink) {
+                    // Retirer la classe active de tous les liens
+                    document.querySelectorAll('nav a').forEach(link => {
+                        link.classList.remove('active-link');
+                    });
+                    // Ajouter la classe active au lien correspondant
+                    correspondingNavLink.classList.add('active-link');
+                }
                 
                 // Activer les icônes de cette section
                 const sectionIcons = entry.target.querySelectorAll(".icon");
@@ -54,6 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (sections[0]) {
             sections[0].classList.add("active");
             
+            // Activer le premier lien de navigation
+            const firstSectionId = sections[0].id;
+            const firstNavLink = document.querySelector(`nav a[href="#${firstSectionId}"]`);
+            if (firstNavLink) {
+                firstNavLink.classList.add('active-link');
+            }
+            
             // Activer les icônes de la première section
             const firstSectionIcons = sections[0].querySelectorAll(".icon");
             firstSectionIcons.forEach(icon => {
@@ -61,4 +81,4 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     }, 100);
-})
+});

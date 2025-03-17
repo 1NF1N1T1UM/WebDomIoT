@@ -54,6 +54,11 @@ nav .logo {
     color: #ff4d4d;
 }
 
+/* Style pour le lien actif dans la navigation */
+.nav-links a.active-link {
+    color: #ff4d4d;
+}
+
 /* Animation des sections */
 section {
     padding: 120px 5%;
