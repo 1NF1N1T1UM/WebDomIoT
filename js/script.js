@@ -12,53 +12,53 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
     
-    // Observer les sections pour les faire apparaître en scrollant
-    const observer = new IntersectionObserver(entries => {
+    // Observer les sections pour les faire apparaître et disparaître en scrollant
+    const sectionObserver = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             // Si la section est visible
             if (entry.isIntersecting) {
                 entry.target.classList.add("active");
                 entry.target.classList.remove("inactive");
+                
+                // Activer les icônes de cette section
+                const sectionIcons = entry.target.querySelectorAll(".icon");
+                sectionIcons.forEach(icon => {
+                    icon.classList.add("show");
+                    icon.classList.remove("hide");
+                });
             } else {
                 // Si la section n'est plus visible
-                if (entry.target.classList.contains("active")) {
-                    entry.target.classList.remove("active");
-                    entry.target.classList.add("inactive");
-                }
+                entry.target.classList.remove("active");
+                entry.target.classList.add("inactive");
+                
+                // Désactiver les icônes de cette section
+                const sectionIcons = entry.target.querySelectorAll(".icon");
+                sectionIcons.forEach(icon => {
+                    icon.classList.remove("show");
+                    icon.classList.add("hide");
+                });
             }
         });
-    }, { threshold: 0.1, rootMargin: "-10% 0px" });
+    }, { 
+        threshold: 0.2,    // Déclenche quand 20% de la section est visible
+        rootMargin: "-10% 0px" // Ajuste légèrement le seuil de déclenchement
+    });
     
-    sections.forEach(section => observer.observe(section));
+    // Observer toutes les sections
+    sections.forEach(section => {
+        sectionObserver.observe(section);
+    });
     
-    // Observer les icônes pour les faire apparaître progressivement
-    const iconObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("show");
-                entry.target.classList.remove("hide");
-            } else {
-                // Si l'icône n'est plus visible
-                if (entry.target.classList.contains("show")) {
-                    entry.target.classList.remove("show");
-                    entry.target.classList.add("hide");
-                }
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    icons.forEach(icon => iconObserver.observe(icon));
-    
-    // Ajouter la classe active à la première section au chargement
+    // Activer automatiquement la première section au chargement
     setTimeout(() => {
         if (sections[0]) {
             sections[0].classList.add("active");
+            
+            // Activer les icônes de la première section
+            const firstSectionIcons = sections[0].querySelectorAll(".icon");
+            firstSectionIcons.forEach(icon => {
+                icon.classList.add("show");
+            });
         }
-        
-        // Activer les icônes de la première section
-        const firstSectionIcons = sections[0].querySelectorAll(".icon");
-        firstSectionIcons.forEach(icon => {
-            icon.classList.add("show");
-        });
     }, 100);
-});
+})
